@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "dgSpecHash": "3bX7ynDXcc0=",
+  "success": true,
+  "projectFilePath": "D:\\Onebox\\Estágio\\ColetorLogs\\ColetorLogs.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\BWX1494577\\.nuget\\packages\\bouncycastle.cryptography\\2.6.2\\bouncycastle.cryptography.2.6.2.nupkg.sha512",
+    "C:\\Users\\BWX1494577\\.nuget\\packages\\dotnetenv\\3.2.0\\dotnetenv.3.2.0.nupkg.sha512",
+    "C:\\Users\\BWX1494577\\.nuget\\packages\\microsoft.extensions.configuration\\1.1.2\\microsoft.extensions.configuration.1.1.2.nupkg.sha512",
+    "C:\\Users\\BWX1494577\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\1.1.2\\microsoft.extensions.configuration.abstractions.1.1.2.nupkg.sha512",
+    "C:\\Users\\BWX1494577\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\BWX1494577\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.3\\microsoft.extensions.logging.abstractions.8.0.3.nupkg.sha512",
+    "C:\\Users\\BWX1494577\\.nuget\\packages\\microsoft.extensions.primitives\\1.1.1\\microsoft.extensions.primitives.1.1.1.nupkg.sha512",
+    "C:\\Users\\BWX1494577\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\BWX1494577\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
+    "C:\\Users\\BWX1494577\\.nuget\\packages\\ssh.net\\2025.1.0\\ssh.net.2025.1.0.nupkg.sha512",
+    "C:\\Users\\BWX1494577\\.nuget\\packages\\superpower\\3.0.0\\superpower.3.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
