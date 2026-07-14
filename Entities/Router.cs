@@ -10,9 +10,9 @@ namespace LCollector.Entities
 
         public Router(IPAddress ip, string hostname, Vendor vendor)
         {
-            this.IP = ip;
-            this.Hostname = hostname;
-            this.Vendor = vendor;
+            IP = ip;
+            Hostname = hostname;
+            Vendor = vendor;
         }
     }
 }

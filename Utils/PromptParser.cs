@@ -1,4 +1,5 @@
 using LCollector.Entities;
+using System.Text.RegularExpressions;
 
 namespace LCollector.Utils
 {
@@ -28,10 +29,11 @@ namespace LCollector.Utils
                 hostname = promptLimpo.Replace("A:", "").Replace("B:", "").Replace("#", "").Trim();
             }
             // REGRA CISCO XR
-            else if (promptLimpo.Contains("RP/0/RP0/CPU0:") && promptLimpo.Contains("#"))
+            else if (Regex.IsMatch(promptLimpo, @"CPU\d+:") && promptLimpo.Contains("#"))
             {
                 vendor = Vendor.CiscoXR;
-                hostname = promptLimpo.Replace("RP/0/RP0/CPU0:", "").Replace("#", "").Trim();
+
+                hostname = Regex.Replace(promptLimpo,@"^.*CPU\d+:","").Replace("#", "").Trim();
             }
             // REGRA CISCO XE
             else if (promptLimpo.Contains("#"))

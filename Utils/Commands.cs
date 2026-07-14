@@ -57,7 +57,6 @@ namespace LCollector.Utils
         public static IReadOnlyList<string> CISCOXE_COMMANDS {get;} =
         [
             "term leng 0",
-            "terminal monitor",
             "sh ip arp",
             "sh ip arp vrf GERENCIA",
             "sh ip arp vrf IUB-DADOS",

@@ -1,3 +1,5 @@
 .env
 LCollector.txt
 Comandos.txt
+bin/
+obj/

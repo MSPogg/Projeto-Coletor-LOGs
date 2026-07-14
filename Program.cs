@@ -7,7 +7,7 @@ using LCollector.Data;
 
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         Env.Load();
         string user = Env.GetString("SSH_USER");
@@ -16,7 +16,9 @@ class Program
 
         var ListaIPs = FileReader.ReadFile("LCollector.txt");
 
-        foreach(var Ip in ListaIPs)
+        var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 10 };
+
+        await Parallel.ForEachAsync(ListaIPs, parallelOptions, async (Ip, cancellationToken) =>
         {
             bool isValid = IPAddress.TryParse(Ip.Ip, out IPAddress? ipConvertido);
 
@@ -35,37 +37,28 @@ class Program
                     
                     Console.WriteLine($"IP: {myRouter.IP} | Hostname: {myRouter.Hostname} | Vendor: {myRouter.Vendor}");
 
-                    if(myRouter.Vendor == Vendor.Huawei)
+                    if(myRouter.Vendor == Vendor.Unknown)
                     {
-                        string logSalvo = networkConnector.ExecuteCommands(myRouter, Commands.HUAWEI_COMMANDS);
-
-                        var fileSaver = new FileSaver();
-
-                        fileSaver.SaveLog(myRouter, logSalvo);
+                        Console.WriteLine($"[AVISO] {myRouter.IP} - Vendor Desconhecido.");
+                        return;
                     }
-                    if(myRouter.Vendor == Vendor.CiscoXE)
+                    
+                    IReadOnlyList<string> commands = myRouter.Vendor switch
                     {
-                        string logSalvo = networkConnector.ExecuteCommands(myRouter, Commands.CISCOXE_COMMANDS);
+                        Vendor.Huawei  => Commands.HUAWEI_COMMANDS,
+                        Vendor.CiscoXE => Commands.CISCOXE_COMMANDS,
+                        Vendor.CiscoXR => Commands.CISCOXR_COMMANDS,
+                        Vendor.Alcatel => Commands.ALCATEL_COMMANDS,
+                        _              => new List<string> ()
+
+                    };
+
+                    if(commands.Count > 0)
+                    {
+                        string log = networkConnector.ExecuteCommands(myRouter, commands);
 
                         var fileSaver = new FileSaver();
-
-                        fileSaver.SaveLog(myRouter, logSalvo);
-                    }
-                    if(myRouter.Vendor == Vendor.CiscoXR)
-                    {
-                        string logSalvo = networkConnector.ExecuteCommands(myRouter, Commands.CISCOXR_COMMANDS);
-
-                        var fileSaver = new FileSaver();
-
-                        fileSaver.SaveLog(myRouter, logSalvo);
-                    }
-                    if(myRouter.Vendor == Vendor.Alcatel)
-                    {
-                        string logSalvo = networkConnector.ExecuteCommands(myRouter, Commands.ALCATEL_COMMANDS);
-
-                        var fileSaver = new FileSaver();
-
-                        fileSaver.SaveLog(myRouter, logSalvo);
+                        fileSaver.SaveLog(myRouter, log);
                     }
                 }
                 catch(Exception ex)
@@ -73,6 +66,6 @@ class Program
                     Console.WriteLine($"Erro interno no loop do IP {myRouter.IP}: {ex.Message}");
                 }
             }
-        }
+        });
     }
 }
