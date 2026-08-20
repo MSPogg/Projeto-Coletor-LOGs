@@ -10,10 +10,11 @@ namespace LCollector.Services
         private readonly string _password;
         private readonly string _ipstelnet;
 
-        public SshService(string user, string password)
+        public SshService(string user, string password, string ipstelnet = "")
         {
             _user = user;
             _password = password;
+            _ipstelnet = ipstelnet;
         }
 
         public string ConnectAndGetPrompt(Router router)
@@ -62,33 +63,42 @@ namespace LCollector.Services
             {
                 Client.Connect();
 
-                using(var Stream = Client.CreateShellStream("xterm", 80, 24, 800, 600, 1024))
+                using(var Stream = Client.CreateShellStream("xterm", 80, 24, 800, 600, 65536))
                 {
                     Thread.Sleep(1000);
                     Stream.Read();
 
                     var logBuilder = new System.Text.StringBuilder();
 
-                    int time = router.Vendor switch
+                    TimeSpan commandTimeout = router.Vendor switch
                     {
-                        Vendor.Huawei  => 700,
-                        Vendor.CiscoXE => 700,
-                        Vendor.CiscoXR => 700,
-                        Vendor.Alcatel => 2000,
-                        _              => throw new Exception("Fabricante desconhecido")
+                        Vendor.Huawei  => TimeSpan.FromMinutes(2),
+                        Vendor.CiscoXE => TimeSpan.FromMinutes(2),
+                        Vendor.CiscoXR => TimeSpan.FromMinutes(2),
+                        Vendor.Alcatel => TimeSpan.FromMinutes(2),
+                        _              => TimeSpan.FromMinutes(2)
                     };
 
                     foreach(var com in commands)
                     {
                         Stream.WriteLine(com); 
-                        Thread.Sleep(time);
+                        
+                        string regexPattern = $@"{Regex.Escape(router.Hostname)}.*[>#\$]\s*$";
 
-                        string resposta = Stream.Read();
-                        logBuilder.Append(resposta);
+                        string? resposta = Stream.Expect(new Regex(regexPattern), commandTimeout);
+
+                        if (!string.IsNullOrEmpty(resposta))
+                        {
+                            logBuilder.AppendLine(resposta);
+                        }
+                        else
+                        {
+                            logBuilder.AppendLine($"[AVISO] Timeout ao aguardar resposta do comando: {com}");
+                            Console.WriteLine($"[TIMEOUT] O roteador {router.IP} travou no comando: {com}"); 
+                        }
                     }
 
                     string log = logBuilder.ToString();
-
                     Client.Disconnect();
                     return log;
                 }

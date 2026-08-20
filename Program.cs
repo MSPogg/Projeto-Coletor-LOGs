@@ -12,11 +12,10 @@ class Program
         Env.Load();
         string user = Env.GetString("SSH_USER");
         string password = Env.GetString("SSH_PASSWORD");
-        var networkConnector = new SshService(user, password);
 
         var ListaIPs = FileReader.ReadFile("LCollector.txt");
 
-        var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 10 };
+        var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 5 };
 
         await Parallel.ForEachAsync(ListaIPs, parallelOptions, async (Ip, cancellationToken) =>
         {
@@ -25,6 +24,8 @@ class Program
             if(isValid)
             {
                 var myRouter = new Router(ipConvertido!, "Desconhecido", Vendor.Unknown);
+
+                var networkConnector = new SshService(user, password);
                 
                 try
                 {

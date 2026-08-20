@@ -7,7 +7,6 @@ namespace LCollector.Utils
     {
         public static (string hostname, Vendor vendor) ParsePrompt(string collectedPrompt)
         {
-            // Forçamos o Trim para eliminar qualquer espaço invisível ou quebra de linha lateral
             string promptLimpo = collectedPrompt.Trim();
 
             string hostname = "Unknown";
@@ -16,7 +15,7 @@ namespace LCollector.Utils
             if (string.IsNullOrWhiteSpace(promptLimpo))
                 return (hostname, vendor);
 
-            // REGRA HUAWEI (Ex: <ESITM10-RMP01>)
+            // REGRA HUAWEI
             if (promptLimpo.Contains("<") && promptLimpo.Contains(">"))
             {
                 vendor = Vendor.Huawei;
